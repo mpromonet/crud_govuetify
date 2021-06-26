@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-main>
+                <v-btn color="primary" dark class="mb-2" @click="onNewItem()">New Item</v-btn>
+                <v-data-table :headers="headers" :items="peoples" class="elevation-1" hide-default-footer>
+                    <template v-slot:item.controls="props">
+                        <v-btn class="mb-2" fab small @click="onButtonClick(props.item)">
+                            <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <template v-slot:item.firstname = "props">
+                        <v-edit-dialog :return-value.sync="props.item.firstname" @save="onUpdateItem(props.item)" >
+                            {{ props.item.firstname }}
+                            <template v-slot:input>
+                                <v-text-field v-model="props.item.firstname" label="Edit" single-line counter></v-text-field>
+                            </template>
+                        </v-edit-dialog>
+                    </template>
+                    <template v-slot:item.lastname = "props">
+                        <v-edit-dialog :return-value.sync="props.item.lastname" @save="onUpdateItem(props.item)" >
+                            {{ props.item.lastname }}
+                            <template v-slot:input>
+                                <v-text-field v-model="props.item.lastname" label="Edit" single-line counter></v-text-field>
+                            </template>
+                        </v-edit-dialog>
+                    </template>     
+                    <template v-slot:item.city = "props">
+                        <v-edit-dialog :return-value.sync="props.item.city" @save="onUpdateItem(props.item)" >
+                            {{ props.item.city }}
+                            <template v-slot:input>
+                                <v-text-field v-model="props.item.city" label="Edit" single-line counter></v-text-field>
+                            </template>
+                        </v-edit-dialog>
+                    </template>                                    
+                </v-data-table>
+            </v-main>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            data: () => {
+                return {
+                    headers: [
+                        { text: 'First Name', value: 'firstname' },
+                        { text: 'Last Name', value: 'lastname' },
+                        { text: 'City', value: 'city' },
+                        { text: 'Actions', value: "controls", sortable: false }
+                    ],
+                    peoples: []
+                }
+            },
+            mounted() {
+                this.getItems()
+            },
+            methods: {
+                getItems: function () {
+                    fetch('/people')
+                        .then(response => response.json())
+                        .then(data => this.peoples = data)
+                        .catch(err => console.log(err))
+                },
+                onButtonClick: function (item) {
+                    console.log('click on ' + item.id)
+                    fetch(`/people/${item.id}`, { method: 'DELETE' })
+                        .then(() => this.getItems())
+                },
+                onNewItem: function (item) {
+                    console.log('new item')
+                    fetch(`/people`, { method: 'POST' })
+                        .then(() => this.getItems())
+                },
+                onUpdateItem: function(item) {
+                    console.log('update item', JSON.stringify(item))
+                    fetch(`/people/${item.id}`, { method: 'PUT', body: JSON.stringify(item)})
+                        .then(() => this.getItems())
+                },
+            }
+        })
+
+    </script>
+</body>
+
+</html>
