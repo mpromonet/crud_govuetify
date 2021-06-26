@@ -6,6 +6,8 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>    
 </head>
 
 <body>
@@ -47,53 +49,7 @@
             </v-main>
         </v-app>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <script>
-        new Vue({
-            el: '#app',
-            vuetify: new Vuetify(),
-            data: () => {
-                return {
-                    headers: [
-                        { text: 'First Name', value: 'firstname' },
-                        { text: 'Last Name', value: 'lastname' },
-                        { text: 'City', value: 'city' },
-                        { text: 'Actions', value: "controls", sortable: false }
-                    ],
-                    peoples: []
-                }
-            },
-            mounted() {
-                this.getItems()
-            },
-            methods: {
-                getItems: function () {
-                    fetch('/people')
-                        .then(response => response.json())
-                        .then(data => this.peoples = data)
-                        .catch(err => console.log(err))
-                },
-                onButtonClick: function (item) {
-                    console.log('click on ' + item.id)
-                    fetch(`/people/${item.id}`, { method: 'DELETE' })
-                        .then(() => this.getItems())
-                },
-                onNewItem: function (item) {
-                    console.log('new item')
-                    fetch(`/people`, { method: 'POST' })
-                        .then(() => this.getItems())
-                },
-                onUpdateItem: function(item) {
-                    console.log('update item', JSON.stringify(item))
-                    fetch(`/people/${item.id}`, { method: 'PUT', body: JSON.stringify(item)})
-                        .then(() => this.getItems())
-                },
-            }
-        })
-
-    </script>
+    <script src="main.js"></script>
 </body>
 
 </html>
