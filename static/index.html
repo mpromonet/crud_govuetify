@@ -20,13 +20,15 @@
             <tbody>
               <tr v-for="(item,idx,k) in items" :key="idx">
                 <td v-for="(header,key) in headers" :key="key">
-                  <v-edit-dialog v-if="header.value !== 'controls'" :return-value.sync="item[header.value]"
-                    @save="onUpdateItem(item)"> {{item[header.value]}}
+                  <v-edit-dialog v-if="header.editable === true" :return-value.sync="item[header.value]"
+                    @save="onUpdateItem(item)">{{item[header.value]}}
                     <template v-slot:input>
                       <v-text-field v-model="item[header.value]" label="Edit" single-line>
                       </v-text-field>
                     </template>
                   </v-edit-dialog>
+                  <template v-if="header.editable !== true">{{item[header.value]}}
+                  </template>
                   <template v-if="header.value === 'controls'">
                     <v-btn class="mb-2" fab small @click="onButtonClick(item)">
                       <v-icon>mdi-delete</v-icon>

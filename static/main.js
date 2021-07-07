@@ -4,9 +4,10 @@ new Vue({
     data: () => {
         return {
             headers: [
-                { text: 'First Name', value: 'firstname' },
-                { text: 'Last Name', value: 'lastname' },
-                { text: 'City', value: 'city' },
+                { text: 'Id', value: 'id' },
+                { text: 'First Name', value: 'firstname', editable: true },
+                { text: 'Last Name', value: 'lastname', editable: true },
+                { text: 'City', value: 'city', editable: true },
                 { text: 'Actions', value: "controls", sortable: false }
             ],
             peoples: []
