@@ -2,54 +2,44 @@
 <html>
 
 <head>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>    
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <v-app>
-            <v-main>
-                <v-btn color="primary" dark class="mb-2" @click="onNewItem()">New Item</v-btn>
-                <v-data-table :headers="headers" :items="peoples" class="elevation-1" hide-default-footer>
-                    <template v-slot:item.controls="props">
-                        <v-btn class="mb-2" fab small @click="onButtonClick(props.item)">
-                            <v-icon>mdi-delete</v-icon>
-                        </v-btn>
+  <div id="app">
+    <v-app>
+      <v-main>
+        <v-btn color="primary" dark class="mb-2" @click="onNewItem()">New Item</v-btn>
+        <v-data-table :headers="headers" :items="peoples" class="elevation-1" hide-default-footer>
+          <template v-slot:body="{ items, headers }">
+            <tbody>
+              <tr v-for="(item,idx,k) in items" :key="idx">
+                <td v-for="(header,key) in headers" :key="key">
+                  <v-edit-dialog v-if="header.value !== 'controls'" :return-value.sync="item[header.value]"
+                    @save="onUpdateItem(item)"> {{item[header.value]}}
+                    <template v-slot:input>
+                      <v-text-field v-model="item[header.value]" label="Edit" single-line>
+                      </v-text-field>
                     </template>
-                    <template v-slot:item.firstname = "props">
-                        <v-edit-dialog :return-value.sync="props.item.firstname" @save="onUpdateItem(props.item)" >
-                            {{ props.item.firstname }}
-                            <template v-slot:input>
-                                <v-text-field v-model="props.item.firstname" label="Edit" single-line counter></v-text-field>
-                            </template>
-                        </v-edit-dialog>
-                    </template>
-                    <template v-slot:item.lastname = "props">
-                        <v-edit-dialog :return-value.sync="props.item.lastname" @save="onUpdateItem(props.item)" >
-                            {{ props.item.lastname }}
-                            <template v-slot:input>
-                                <v-text-field v-model="props.item.lastname" label="Edit" single-line counter></v-text-field>
-                            </template>
-                        </v-edit-dialog>
-                    </template>     
-                    <template v-slot:item.city = "props">
-                        <v-edit-dialog :return-value.sync="props.item.city" @save="onUpdateItem(props.item)" >
-                            {{ props.item.city }}
-                            <template v-slot:input>
-                                <v-text-field v-model="props.item.city" label="Edit" single-line counter></v-text-field>
-                            </template>
-                        </v-edit-dialog>
-                    </template>                                    
-                </v-data-table>
-            </v-main>
-        </v-app>
-    </div>
-    <script src="main.js"></script>
+                  </v-edit-dialog>
+                  <template v-if="header.value === 'controls'">
+                    <v-btn class="mb-2" fab small @click="onButtonClick(item)">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-data-table>
+      </v-main>
+    </v-app>
+  </div>
+  <script src="main.js"></script>
 </body>
-
 </html>
